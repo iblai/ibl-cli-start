@@ -49,7 +49,7 @@ liblzma-dev python3-openssl git
 # Setup default directories
 echo "[2/10] Setting up default directories..."
 if [ ! -d "/ibl/" ]; then
-    mkdir /ibl/
+    sudo mkdir /ibl/
 fi
 export IBL_ROOT=/ibl/
 sudo chown -R $USER:$USER /ibl/
