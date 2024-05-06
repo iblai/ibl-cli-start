@@ -19,8 +19,8 @@ fi
 
 # Check system storage
 echo "[0/10] Checking system storage..."
-TOTAL_STORAGE=$(df -h / | awk '/^\/dev\// {print $2}')
-REQUIRED_STORAGE="30G"
+TOTAL_STORAGE=$(df / | awk '/^\/dev\// {print $4}')
+REQUIRED_STORAGE="300000000"
 if [[ $TOTAL_STORAGE < $REQUIRED_STORAGE ]]; then
     echo "Error: Insufficient storage. This script requires at least $REQUIRED_STORAGE of storage. Exiting..."
     exit 1
