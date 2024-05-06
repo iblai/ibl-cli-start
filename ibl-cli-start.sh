@@ -112,6 +112,7 @@ BRANCH=${BRANCH:-"develop"}
 
 # Then use $BRANCH in your script where you need to specify the branch
 # Install IBL CLI
+echo "[9/10] Installing IBL CLI..."
 pip install -e git+https://$GIT_ACCESS_TOKEN@github.com/ibleducation/ibl-cli-ops.git@$BRANCH#egg=ibl-cli
 
 # Configure IBL replicator
