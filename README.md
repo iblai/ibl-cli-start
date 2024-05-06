@@ -7,7 +7,32 @@ This script automates the process of setting up an IBL server. It checks the sys
 - Ubuntu 20.04 or later
 - At least 20G of memory
 - At least 30G of storage
-
+- You will need read access from IBL ECR that looks like:
+    ```
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "ecr:GetAuthorizationToken",
+                    "ecr:BatchGetImage",
+                    "ecr:GetDownloadUrlForLayer",
+                    "ecr-public:GetAuthorizationToken",
+                    "sts:GetServiceBearerToken",
+                    "ecr:ListTagsForResource"
+                ],
+                "Resource": "*"
+            }
+        ]
+    }
+    ```
+    So make sure to get your `AWS Access Key ID` and `AWS Secret Access Key` form IBL.
+    The region and output format default to.
+    ```
+    Default region name:  us-east-1
+    Default output format:  json
+    ```
 ## Dependencies
 
 - Docker
