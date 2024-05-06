@@ -16,6 +16,8 @@ This script automates the process of setting up an IBL server. It checks the sys
 - Pyenv
 - Python 3.8.3
 - Cargo
+- Pip
+- Unzip
 
 ## Usage
 
