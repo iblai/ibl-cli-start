@@ -2,7 +2,7 @@
 # Check Ubuntu version
 echo "[0/10] Checking Ubuntu version..."
 UBUNTU_VERSION=$(lsb_release -rs)
-REQUIRED_VERSION="20.04"
+REQUIRED_VERSION="22.04"
 if [[ $UBUNTU_VERSION != $REQUIRED_VERSION* ]]; then
     echo "Error: This script requires Ubuntu $REQUIRED_VERSION or later. Exiting..."
     exit 1
