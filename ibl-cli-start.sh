@@ -22,11 +22,11 @@ function ibl_describeme () {
         echo -e " | ||  _ \| |     | |   | |    | |  \___ \ | | / _ \ | |_) || |  "
         echo -e " | || |_) | |___  | |___| |___ | |   ___) || |/ ___ \|  _ < | |  "
         echo -e "|___|____/|_____|  \____|_____|___| |____/ |_/_/   \_\_| \_\|_|  "
-                                                                                                                              
-        echo " "                                                                                    
+
+        echo " "
         echo -e "${purple}                                                    ${SCRIPT_VERSION}"
         echo -e "${clear}"
-        echo " ---------------------------------------------------------------"                                                            
+        echo " ---------------------------------------------------------------"
         echo ""
 }
 
@@ -35,7 +35,7 @@ ibl_describeme
 
 
 # Check Ubuntu version
-echo -e "[${yellow}0${clear}/10] Checking Ubuntu version..."
+echo -e "[${yellow}0${clear}/11] Checking Ubuntu version..."
 UBUNTU_VERSION=$(lsb_release -rs)
 REQUIRED_VERSION="22.04"
 if [[ $UBUNTU_VERSION != $REQUIRED_VERSION* ]]; then
@@ -46,7 +46,7 @@ fi
 
 # Check system memory
 # Check system memory
-echo -e "[${yellow}0${clear}/10] Checking system memory..."
+echo -e "[${yellow}0${clear}/11] Checking system memory..."
 TOTAL_MEMORY=$(free | awk '/^Mem:/ {print $2}')
 REQUIRED_MEMORY="20000000"
 
@@ -57,7 +57,7 @@ if [[ $TOTAL_MEMORY -lt $REQUIRED_MEMORY ]]; then
 fi
 
 # Check system storage
-echo -e "[${yellow}0${clear}/10] Checking system storage..."
+echo -e "[${yellow}0${clear}/11] Checking system storage..."
 TOTAL_STORAGE=$(df / | awk '/^\/dev\// {print $4}')
 REQUIRED_STORAGE="30000000"
 if [[ $TOTAL_STORAGE -lt $REQUIRED_STORAGE ]]; then
@@ -67,7 +67,7 @@ if [[ $TOTAL_STORAGE -lt $REQUIRED_STORAGE ]]; then
 fi
 
 # Update and install dependencies
-echo -e "[${yellow}1${clear}/10] Updating and installing dependencies..."
+echo -e "[${yellow}1${clear}/11] Updating and installing dependencies..."
 sudo apt-get update
 
 if ! command -v docker &> /dev/null; then
@@ -92,7 +92,7 @@ wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev \
 liblzma-dev python3-openssl git
 
 # Setup default directories
-echo -e "[${yellow}2${clear}/10] Setting up default directories..."
+echo -e "[${yellow}2${clear}/11] Setting up default directories..."
 if [ ! -d "/ibl/" ]; then
     sudo mkdir /ibl/
     sudo chown -R $USER:$USER /ibl/
@@ -102,7 +102,7 @@ fi
 # Update ~/.bashrc with export IBL_ROOT=/ibl/
 BASH_DONE=$(cat ~/.bashrc | grep -i -c "IBL_ROOT")
  if [[ $BASH_DONE -eq 0 ]]; then
-echo -e 'export IBL_ROOT=/ibl/\nexport PATH="~/.pyenv/bin:$PATH"\neval "$(pyenv init -)"\neval "$(pyenv virtualenv-init -)"\npyenv activate ibl-cli-ops\n. "$HOME/.cargo/env"' >> ~/.bashrc
+echo -e 'export IBL_ROOT=/ibl/\nexport PATH="~/.pyenv/bin:$PATH"\neval "$(pyenv init -)"\neval "$(pyenv virtualenv-init -)"\npyenv activate ibl-cli-ops"' >> ~/.bashrc
 
 # Apply changes before penv install
  export IBL_ROOT=/ibl/
@@ -113,7 +113,7 @@ fi
 # Setup pyenv
 # Check if pyenv is already installed
 if ! command -v pyenv &> /dev/null; then
-    echo -e "[${yellow}3${clear}/10] Setting up pyenv..."
+    echo -e "[${yellow}3${clear}/11] Setting up pyenv..."
     curl https://pyenv.run | bash
 fi
 
@@ -124,27 +124,28 @@ fi
  pyenv activate ibl-cli-ops\n
 
 # Python installation
-echo -e "[${yellow}4${clear}/10] Installing Python..."
+echo -e "[${yellow}4${clear}/11] Installing Python..."
 pyenv install 3.8.3
 pyenv global 3.8.3
 pyenv virtualenv 3.8.3 ibl-cli-ops
 pyenv activate ibl-cli-ops
 
 # Install cargo
-echo -e "[${yellow}5${clear}/10] Installing cargo..."
+echo -e "[${yellow}5${clear}/11] Installing cargo..."
 curl https://sh.rustup.rs -sSf | sh
 
 # Apply changes to the current session
-#source ~/.bashrc
+echo -e '\n. "$HOME/.cargo/env"' >> ~/.bashrc
+source ~/.bashrc
 
 # Install AWS CLI
-echo -e "[${yellow}6${clear}/10] Installing AWS CLI..."
+echo -e "[${yellow}6${clear}/11] Installing AWS CLI..."
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
 
 # AWS Configuration
-echo -e "[${yellow}7${clear}/10] Configuring AWS..."
+echo -e "[${yellow}7${clear}/11] Configuring AWS..."
 read -p 'AWS Access Key ID: ' AWS_ACCESS_KEY_ID
 read -p 'AWS Secret Access Key: ' AWS_SECRET_ACCESS_KEY
 AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-"us-east-1"}
@@ -155,7 +156,7 @@ aws configure set default.region $AWS_DEFAULT_REGION
 aws configure set default.output $AWS_DEFAULT_OUTPUT_FORMAT
 
 # AWS ECR Docker Login
-echo -e "[${yellow}8${clear}/10] Logging in to AWS ECR..."
+echo -e "[${yellow}8${clear}/11] Logging in to AWS ECR..."
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 765174860755.dkr.ecr.us-east-1.amazonaws.com
 
 # Check if GIT_ACCESS_TOKEN was provided as an argument
@@ -167,6 +168,9 @@ then
     exit 1
 fi
 
+echo -e "[${yellow}9${clear}/11] Install urllib3==1.26.15 and CLI..."
+pip install urllib3==1.26.15
+
 BRANCH=${BRANCH:-"develop"}
 
 # Then use $BRANCH in your script where you need to specify the branch
@@ -174,11 +178,11 @@ BRANCH=${BRANCH:-"develop"}
 pip install -e git+https://$GIT_ACCESS_TOKEN@github.com/ibleducation/ibl-cli-ops.git@$BRANCH#egg=ibl-cli
 
 # Configure IBL replicator
-echo -e "[${yellow}9${clear}/10] Configuring IBL replicator..."
+echo -e "[${yellow}10${clear}/11] Configuring IBL replicator..."
 echo "n" | ibl replicator configure
 
 # Launch IBL replicator
-echo -e "[${yellow}10${clear}/10] Launching IBL services..."
+echo -e "[${yellow}11${clear}/11] Launching IBL services..."
 echo "n" | ibl launch --ibl-replicator
 ibl replicator up -d
 ibl launch --ibl-dm --ibl-edx --ibl-oauth --ibl-oidc --ibl-edx-manager --ibl-axd-reporter --ibl-axd-web-analytics --ibl-search
