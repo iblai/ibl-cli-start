@@ -1,42 +1,81 @@
 #!/bin/bash
+
+SCRIPT_VERSION='version 0.5'
+
+# Term Color vars
+red='\033[0;31m'
+green='\033[0;32m'
+blue='\033[0;34m'
+yellow='\033[0;33m'
+cyan='\033[0;36m'
+purple='\033[0;35m'
+clear='\033[0m'
+lyellow='\033[2;33m'
+
+
+function ibl_describeme () {
+
+        echo -e "${green}"
+
+        echo -e " ___ ____  _        ____ _     ___   ____ _____  _    ____ _____ "
+        echo -e "|_ _| __ )| |      / ___| |   |_ _| / ___|_   _|/ \  |  _ \_   _|"
+        echo -e " | ||  _ \| |     | |   | |    | |  \___ \ | | / _ \ | |_) || |  "
+        echo -e " | || |_) | |___  | |___| |___ | |   ___) || |/ ___ \|  _ < | |  "
+        echo -e "|___|____/|_____|  \____|_____|___| |____/ |_/_/   \_\_| \_\|_|  "
+                                                                                                                              
+        echo " "                                                                                    
+        echo -e "${purple}                                                    ${SCRIPT_VERSION}"
+        echo -e "${clear}"
+        echo " ---------------------------------------------------------------"                                                            
+        echo ""
+}
+
+ibl_describeme
+
+
+
 # Check Ubuntu version
-echo "[0/10] Checking Ubuntu version..."
+echo -e "[${yellow}0${clear}/10] Checking Ubuntu version..."
 UBUNTU_VERSION=$(lsb_release -rs)
 REQUIRED_VERSION="22.04"
 if [[ $UBUNTU_VERSION != $REQUIRED_VERSION* ]]; then
-    echo "Error: This script requires Ubuntu $REQUIRED_VERSION or later. Exiting..."
+    echo -e "${red}Error: This script requires Ubuntu $REQUIRED_VERSION or later. Exiting...${clear}"
     exit 1
 fi
 
+
 # Check system memory
-echo "[0/10] Checking system memory..."
-TOTAL_MEMORY=$(free -h | awk '/^Mem:/ {print $2}')
-REQUIRED_MEMORY="20G"
-if [[ $TOTAL_MEMORY < $REQUIRED_MEMORY ]]; then
-    echo "Error: Insufficient memory. This script requires at least $REQUIRED_MEMORY of memory. Exiting..."
+# Check system memory
+echo -e "[${yellow}0${clear}/10] Checking system memory..."
+TOTAL_MEMORY=$(free | awk '/^Mem:/ {print $2}')
+REQUIRED_MEMORY="20000000"
+
+if [[ $TOTAL_MEMORY -lt $REQUIRED_MEMORY ]]; then
+    REQUIRED_MEMORY=$(expr $REQUIRED_MEMORY / 1000000)
+    echo -e "${red}Error: Insufficient memory. This script requires at least ${REQUIRED_MEMORY}GB of memory. Exiting...${clear}"
     exit 1
 fi
 
 # Check system storage
-echo "[0/10] Checking system storage..."
+echo -e "[${yellow}0${clear}/10] Checking system storage..."
 TOTAL_STORAGE=$(df / | awk '/^\/dev\// {print $4}')
-REQUIRED_STORAGE="300000000"
-if [[ $TOTAL_STORAGE < $REQUIRED_STORAGE ]]; then
-    echo "Error: Insufficient storage. This script requires at least $REQUIRED_STORAGE of storage. Exiting..."
+REQUIRED_STORAGE="30000000"
+if [[ $TOTAL_STORAGE -lt $REQUIRED_STORAGE ]]; then
+    echo -e "${red}Error: Insufficient storage. This script requires at least $REQUIRED_STORAGE of storage. Exiting...${clear}"
     exit 1
 fi
 
 # Update and install dependencies
-echo "[1/10] Updating and installing dependencies..."
+echo -e "[${yellow}1${clear}/10] Updating and installing dependencies..."
 sudo apt-get update
 
 if ! command -v docker &> /dev/null; then
-    echo "Error: Docker is not installed. Installing Docker..."
+    echo -e "${red}Error: Docker is not installed. Installing Docker...${clear}"
     sudo apt-get install -y docker
 fi
 
 if ! command -v docker-compose &> /dev/null; then
-    echo "Error: Docker Compose is not installed. Installing Docker Compose..."
+    echo -e "${red}Error: Docker Compose is not installed. Installing Docker Compose...${clear}"
     sudo apt-get install -y docker-compose
 fi
 
@@ -45,7 +84,6 @@ build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev 
 wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev \
 liblzma-dev python3-openssl git
 
-# Setup default directories
 # Setup default directories
 echo "[2/10] Setting up default directories..."
 if [ ! -d "/ibl/" ]; then
