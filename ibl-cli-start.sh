@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRIPT_VERSION='version 0.5'
+SCRIPT_VERSION='version 0.6'
 
 # Term Color vars
 red='\033[0;31m'
@@ -61,7 +61,8 @@ echo -e "[${yellow}0${clear}/10] Checking system storage..."
 TOTAL_STORAGE=$(df / | awk '/^\/dev\// {print $4}')
 REQUIRED_STORAGE="30000000"
 if [[ $TOTAL_STORAGE -lt $REQUIRED_STORAGE ]]; then
-    echo -e "${red}Error: Insufficient storage. This script requires at least $REQUIRED_STORAGE of storage. Exiting...${clear}"
+    REQUIRED_STORAGE=$(expr $REQUIRED_STORAGE / 1000000)
+    echo -e "${red}Error: Insufficient storage. This script requires at least ${REQUIRED_STORAGE}GB of storage. Exiting...${clear}"
     exit 1
 fi
 
@@ -85,7 +86,7 @@ wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev \
 liblzma-dev python3-openssl git
 
 # Setup default directories
-echo "[2/10] Setting up default directories..."
+echo -e "[${yellow}2${clear}/10] Setting up default directories..."
 if [ ! -d "/ibl/" ]; then
     sudo mkdir /ibl/
 fi
@@ -93,31 +94,34 @@ export IBL_ROOT=/ibl/
 sudo chown -R $USER:$USER /ibl/
 
 # Update ~/.bashrc with export IBL_ROOT=/ibl/
+BASH_DONE=$(cat ~/.bashrc | grep -i -c "IBL_ROOT")
+ if [[ $BASH_DONE -eq 0 ]]; then
 echo -e 'export IBL_ROOT=/ibl/\nexport PATH="~/.pyenv/bin:$PATH"\neval "$(pyenv init -)"\neval "$(pyenv virtualenv-init -)"\npyenv activate ibl-cli-ops\n. "$HOME/.cargo/env"' >> ~/.bashrc
+fi
 
 # Setup pyenv
 # Check if pyenv is already installed
 if ! command -v pyenv &> /dev/null; then
-    echo "[3/10] Setting up pyenv..."
+    echo -e "[${yellow}3${clear}/10] Setting up pyenv..."
     curl https://pyenv.run | bash
 fi
 
 # Python installation
-echo "[4/10] Installing Python..."
+echo -e "[${yellow}4${clear}/10] Installing Python..."
 pyenv install 3.8.3
 pyenv global 3.8.3
 pyenv virtualenv 3.8.3 ibl-cli-ops
 pyenv activate ibl-cli-ops
 
 # Install cargo
-echo "[5/10] Installing cargo..."
+echo -e "[${yellow}5${clear}/10] Installing cargo..."
 curl https://sh.rustup.rs -sSf | sh
 
 # Apply changes to the current session
 source ~/.bashrc
 
 # Install AWS CLI
-echo "[6/10] Installing AWS CLI..."
+echo -e "[${yellow}6${clear}/10] Installing AWS CLI..."
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
