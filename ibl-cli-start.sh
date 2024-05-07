@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRIPT_VERSION='version 0.6'
+SCRIPT_VERSION='version 0.7'
 
 # Term Color vars
 red='\033[0;31m'
@@ -80,8 +80,11 @@ if ! command -v docker-compose &> /dev/null; then
     sudo apt-get install -y docker-compose
 fi
 
-sudo adduser $USER docker
-sudo su - $USER
+
+if ! getent group docker | grep -qw "$USER"; then
+    sudo adduser $USER docker
+    sudo su - $USER
+fi
 
 sudo apt-get install -y unzip awscli \
 build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
