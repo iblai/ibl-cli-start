@@ -80,6 +80,9 @@ if ! command -v docker-compose &> /dev/null; then
     sudo apt-get install -y docker-compose
 fi
 
+sudo adduser $USER docker
+sudo su - $USER
+
 sudo apt-get install -y unzip awscli \
 build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
 wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev \
@@ -89,14 +92,19 @@ liblzma-dev python3-openssl git
 echo -e "[${yellow}2${clear}/10] Setting up default directories..."
 if [ ! -d "/ibl/" ]; then
     sudo mkdir /ibl/
+    sudo chown -R $USER:$USER /ibl/
 fi
-export IBL_ROOT=/ibl/
-sudo chown -R $USER:$USER /ibl/
+
 
 # Update ~/.bashrc with export IBL_ROOT=/ibl/
 BASH_DONE=$(cat ~/.bashrc | grep -i -c "IBL_ROOT")
  if [[ $BASH_DONE -eq 0 ]]; then
 echo -e 'export IBL_ROOT=/ibl/\nexport PATH="~/.pyenv/bin:$PATH"\neval "$(pyenv init -)"\neval "$(pyenv virtualenv-init -)"\npyenv activate ibl-cli-ops\n. "$HOME/.cargo/env"' >> ~/.bashrc
+
+# Apply changes before penv install
+ export IBL_ROOT=/ibl/
+ . "$HOME/.cargo/env"
+
 fi
 
 # Setup pyenv
@@ -105,6 +113,12 @@ if ! command -v pyenv &> /dev/null; then
     echo -e "[${yellow}3${clear}/10] Setting up pyenv..."
     curl https://pyenv.run | bash
 fi
+
+# load pyenv bash without reload
+ export PATH="~/.pyenv/bin:$PATH"
+ eval "$(pyenv init -)"
+ eval "$(pyenv virtualenv-init -)"
+ pyenv activate ibl-cli-ops\n
 
 # Python installation
 echo -e "[${yellow}4${clear}/10] Installing Python..."
@@ -118,7 +132,7 @@ echo -e "[${yellow}5${clear}/10] Installing cargo..."
 curl https://sh.rustup.rs -sSf | sh
 
 # Apply changes to the current session
-source ~/.bashrc
+#source ~/.bashrc
 
 # Install AWS CLI
 echo -e "[${yellow}6${clear}/10] Installing AWS CLI..."
@@ -127,9 +141,9 @@ unzip awscliv2.zip
 sudo ./aws/install
 
 # AWS Configuration
-echo "[7/10] Configuring AWS..."
-read -sp 'AWS Access Key ID: ' AWS_ACCESS_KEY_ID
-read -sp 'AWS Secret Access Key: ' AWS_SECRET_ACCESS_KEY
+echo -e "[${yellow}7${clear}/10] Configuring AWS..."
+read -p 'AWS Access Key ID: ' AWS_ACCESS_KEY_ID
+read -p 'AWS Secret Access Key: ' AWS_SECRET_ACCESS_KEY
 AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-"us-east-1"}
 AWS_DEFAULT_OUTPUT_FORMAT=${AWS_DEFAULT_OUTPUT_FORMAT:-"json"}
 aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
@@ -138,7 +152,7 @@ aws configure set default.region $AWS_DEFAULT_REGION
 aws configure set default.output $AWS_DEFAULT_OUTPUT_FORMAT
 
 # AWS ECR Docker Login
-echo "[8/10] Logging in to AWS ECR..."
+echo -e "[${yellow}8${clear}/10] Logging in to AWS ECR..."
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 765174860755.dkr.ecr.us-east-1.amazonaws.com
 
 # Check if GIT_ACCESS_TOKEN was provided as an argument
@@ -146,7 +160,7 @@ read -sp 'GIT Access Token: ' GIT_ACCESS_TOKEN
 
 if [ -z "$GIT_ACCESS_TOKEN" ]
 then
-    echo "Error: No GIT_ACCESS_TOKEN provided. Exiting..."
+    echo -e "${red}Error: No GIT_ACCESS_TOKEN provided. Exiting...${clear}"
     exit 1
 fi
 
@@ -157,11 +171,11 @@ BRANCH=${BRANCH:-"develop"}
 pip install -e git+https://$GIT_ACCESS_TOKEN@github.com/ibleducation/ibl-cli-ops.git@$BRANCH#egg=ibl-cli
 
 # Configure IBL replicator
-echo "[9/10] Configuring IBL replicator..."
+echo -e "[${yellow}9${clear}/10] Configuring IBL replicator..."
 echo "n" | ibl replicator configure
 
 # Launch IBL replicator
-echo "[10/10] Launching IBL services..."
+echo -e "[${yellow}10${clear}/10] Launching IBL services..."
 echo "n" | ibl launch --ibl-replicator
 ibl replicator up -d
 ibl launch --ibl-dm --ibl-edx --ibl-oauth --ibl-oidc --ibl-edx-manager --ibl-axd-reporter --ibl-axd-web-analytics --ibl-search
