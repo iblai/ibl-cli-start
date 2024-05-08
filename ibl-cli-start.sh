@@ -226,6 +226,7 @@ ibl replicator up -d
 
 echo -e "[${yellow}14${clear}/19] Launching IBL Data Manager..."
 ibl launch --ibl-dm
+ibl dm update
 
 echo -e "[${yellow}15${clear}/19] Launching IBL edX..."
 ibl launch --ibl-edx
