@@ -210,6 +210,8 @@ read BASE_DOMAIN
 
 # Save the base domain in the ibl config
 ibl config save --set BASE_DOMAIN=$BASE_DOMAIN
+ibl config save
+ibl tutor config save
 
 # Configure IBL replicator
 echo -e "[${yellow}11${clear}/19] Configuring IBL replicator..."
