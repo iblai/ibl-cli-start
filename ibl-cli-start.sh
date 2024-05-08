@@ -195,6 +195,8 @@ fi
 echo -e "[${yellow}9${clear}/19] Install urllib3==1.26.15 and CLI..."
 pip install urllib3==1.26.15
 
+source ~/.bashrc
+
 BRANCH=${BRANCH:-"develop"}
 
 # Then use $BRANCH in your script where you need to specify the branch
