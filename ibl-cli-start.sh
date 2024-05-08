@@ -35,7 +35,7 @@ ibl_describeme
 
 
 # Check Ubuntu version
-echo -e "[${yellow}0${clear}/18] Checking Ubuntu version..."
+echo -e "[${yellow}0${clear}/19] Checking Ubuntu version..."
 UBUNTU_VERSION=$(lsb_release -rs)
 REQUIRED_VERSION="22.04"
 if [[ $UBUNTU_VERSION != $REQUIRED_VERSION* ]]; then
@@ -46,7 +46,7 @@ fi
 
 # Check system memory
 # Check system memory
-echo -e "[${yellow}0${clear}/18] Checking system memory..."
+echo -e "[${yellow}0${clear}/19] Checking system memory..."
 TOTAL_MEMORY=$(free | awk '/^Mem:/ {print $2}')
 REQUIRED_MEMORY="20000000"
 
@@ -57,7 +57,7 @@ if [[ $TOTAL_MEMORY -lt $REQUIRED_MEMORY ]]; then
 fi
 
 # Check system storage
-echo -e "[${yellow}0${clear}/18] Checking system storage..."
+echo -e "[${yellow}0${clear}/19] Checking system storage..."
 TOTAL_STORAGE=$(df / | awk '/^\/dev\// {print $4}')
 REQUIRED_STORAGE="30000000"
 if [[ $TOTAL_STORAGE -lt $REQUIRED_STORAGE ]]; then
@@ -244,3 +244,6 @@ ibl launch --ibl-search
 
 echo -e "[${yellow}19${clear}/19] Launching IBL Search..."
 ibl global-proxy launch
+
+echo "Cleaning up..."
+docker system prune -f
