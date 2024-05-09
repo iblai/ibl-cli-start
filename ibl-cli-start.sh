@@ -123,6 +123,13 @@ if [ ! -d "/ibl/" ]; then
 fi
 
 
+# Setup pyenv
+# Check if pyenv is already installed
+if ! command -v pyenv &> /dev/null; then
+    echo -e "[${yellow}3${clear}/19] Setting up pyenv..."
+    curl https://pyenv.run | bash
+fi
+
 # Update ~/.bashrc with export IBL_ROOT=/ibl/
 BASH_DONE=$(cat ~/.bashrc | grep -i -c "IBL_ROOT")
  if [[ $BASH_DONE -eq 0 ]]; then
@@ -130,16 +137,9 @@ echo -e 'export IBL_ROOT=/ibl/\nexport PATH="~/.pyenv/bin:$PATH"\neval "$(pyenv 
 
 # Apply changes before penv install
  export IBL_ROOT=/ibl/
- . "$HOME/.cargo/env"
 
 fi
 
-# Setup pyenv
-# Check if pyenv is already installed
-if ! command -v pyenv &> /dev/null; then
-    echo -e "[${yellow}3${clear}/19] Setting up pyenv..."
-    curl https://pyenv.run | bash
-fi
 
 # load pyenv bash without reload
  export PATH="~/.pyenv/bin:$PATH"
@@ -156,10 +156,11 @@ pyenv activate ibl-cli-ops
 
 # Install cargo
 echo -e "[${yellow}5${clear}/19] Installing cargo..."
-curl https://sh.rustup.rs -sSf | sh
-
-# Apply changes to the current session
+#curl https://sh.rustup.rs -sSf | sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 echo -e '\n. "$HOME/.cargo/env"' >> ~/.bashrc
+source $HOME/.cargo/env
+
 source ~/.bashrc
 
 # Install AWS CLI
@@ -195,6 +196,7 @@ fi
 echo -e "[${yellow}9${clear}/19] Install urllib3==1.26.15 and CLI..."
 pip install urllib3==1.26.15
 
+echo "Reload bashrc...."
 source ~/.bashrc
 
 BRANCH=${BRANCH:-"develop"}
@@ -202,8 +204,6 @@ BRANCH=${BRANCH:-"develop"}
 # Then use $BRANCH in your script where you need to specify the branch
 # Install IBL CLI
 pip install -e git+https://$GIT_ACCESS_TOKEN@github.com/ibleducation/ibl-cli-ops.git@$BRANCH#egg=ibl-cli
-
-
 
 echo -e "[${yellow}10${clear}/19] Setup Base Domain..."
 # Ask the user for the base domain
