@@ -231,15 +231,15 @@ echo -e "\n[${yellow}13${clear}/19] Launching IBL Replicator..."
 echo "n" | ibl launch --ibl-replicator
 ibl replicator up -d
 
-echo -e "[${yellow}14${clear}/19] Launching IBL Data Manager..."
-ibl launch --ibl-dm
-ibl dm update
-
-echo -e "[${yellow}15${clear}/19] Launching IBL edX..."
+echo -e "[${yellow}14${clear}/19] Launching IBL edX..."
 ibl launch --ibl-edx
 ibl launch --ibl-oauth
 ibl launch --ibl-oidc
 ibl launch --ibl-edx-manager
+
+echo -e "[${yellow}15${clear}/19] Launching IBL Data Manager..."
+ibl launch --ibl-dm
+ibl dm update
 
 echo -e "[${yellow}16${clear}/19] Launching IBL AXD Reporter..."
 ibl launch --ibl-axd-reporter
