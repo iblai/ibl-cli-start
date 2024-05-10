@@ -199,8 +199,13 @@ pip install urllib3==1.26.15
 echo "Reload bashrc...."
 source ~/.bashrc
 
-BRANCH=${BRANCH:-"develop"}
-
+echo "Is this a swarm deployment? (yes/no)"
+read answer
+if [ "$answer" != "${answer#[Yy]}" ] ;then
+    BRANCH="swarm-develop"
+else
+    BRANCH="develop"
+fi
 # Then use $BRANCH in your script where you need to specify the branch
 # Install IBL CLI
 pip install -e git+https://$GIT_ACCESS_TOKEN@github.com/ibleducation/ibl-cli-ops.git@$BRANCH#egg=ibl-cli
