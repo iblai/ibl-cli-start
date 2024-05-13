@@ -156,11 +156,12 @@ pyenv activate ibl-cli-ops
 
 # Install cargo
 echo -e "[${yellow}5${clear}/19] Installing cargo..."
-#curl https://sh.rustup.rs -sSf | sh
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-echo -e '\n. "$HOME/.cargo/env"' >> ~/.bashrc
-source $HOME/.cargo/env
 
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+if ! grep -q '. "$HOME/.cargo/env"' ~/.bashrc; then
+    echo -e '\n. "$HOME/.cargo/env"' >> ~/.bashrc
+fi
+source $HOME/.cargo/env
 source ~/.bashrc
 
 # Install AWS CLI
@@ -240,7 +241,6 @@ ibl launch --ibl-edx-manager
 
 echo -e "[${yellow}15${clear}/19] Launching IBL Data Manager..."
 ibl launch --ibl-dm
-ibl dm update
 
 echo -e "[${yellow}16${clear}/19] Launching IBL AXD Reporter..."
 ibl launch --ibl-axd-reporter
