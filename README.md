@@ -7,7 +7,10 @@ This script automates the process of setting up an IBL server. It checks the sys
 - Ubuntu 20.04 or later
 - At least 20G of memory
 - At least 30G of storage
-- You will need read access from IBL ECR that looks like:
+- (OPTIONAL: If Image registry is on GCP) You will need a JSON key of a service account with read access to the GCP artifact registry. The setup process will require you to paste the `Service account email` and the contents of the `key.json`. The following permissions need to be attached to the Service Account:
+    * Artifact Registry Reader
+    * Service Account Token Creator
+- (OPTIONAL: If Image registry is on AWS ECR) You will need read access from IBL ECR that looks like:
     ```
     {
         "Version": "2012-10-17",
