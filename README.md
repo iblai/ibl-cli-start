@@ -49,9 +49,14 @@ This script automates the process of setting up an IBL server. It checks the sys
 
 ## Usage
 
-1. Clone the script on your server `git clone https://github.com/iblai/ibl-cli-start.git`
-2. Enter `ibl-cli-start` dir.
-3. Make the script executable:
+1. (OPTIONAL: If you're using your own image regisry) Update the default.yml file in `https://github.com/<ORG>/ibl-cli-ops/blob/master/ibl/templates/config/defaults.yml` (In appropriate branch) with the latest ECR/GCP image URI for the following:
+    * IBL_EDX_IMAGE: <IBL_EDX_IMAGE IMAGE-URI>
+    * IBL_DM_IMAGE: <IBL_DM_IMAGE IMAGE-URI>
+    * IBL_AXD_REPORTER_IMAGE: <IBL_AXD_REPORTER_IMAGE IMAGE-URI>
+    * IBL_AXD_WEB_ANALYTICS_IMAGE: <IBL_AXD_WEB_ANALYTICS IMAGE-URI>
+2. Clone the script on your server `git clone https://github.com/iblai/ibl-cli-start.git`
+3. Enter `ibl-cli-start` dir.
+4. Make the script executable:
 
 ```bash
 chmod +x ibl-cli-start.sh
@@ -62,7 +67,7 @@ Run the script:
 ./ibl-cli-start.sh
 ```
 
-During the execution of the script, you will be prompted to enter your `AWS Access Key ID`,` AWS Secret Access Key`, and `Git Access Token`. These are necessary for the configuration of AWS and the installation of the IBL CLI.
+During the execution of the script, you will be prompted to enter your `AWS Access Key ID`,` AWS Secret Access Key` OR GCP `credentials.json` and the `service account email`, and `Git Access Token`. These are necessary for the configuration of AWS and the installation of the IBL CLI.
 
 *NOTE: These are prompts to avoid leaving secrets and keys in the bash history and also store them in the script.*
 
