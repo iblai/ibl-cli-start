@@ -248,25 +248,25 @@ echo -e "\n[${yellow}13${clear}/19] Launching IBL Replicator..."
 echo "n" | ibl launch --ibl-replicator
 ibl replicator up -d
 
+echo -e "[${yellow}17${clear}/19] Launching IBL AXD Web Analytics..."
+ibl launch --ibl-axd-web-analytics
+
 echo -e "[${yellow}14${clear}/19] Launching IBL edX..."
 ibl launch --ibl-edx
 ibl launch --ibl-oauth
 ibl launch --ibl-oidc
 ibl launch --ibl-edx-manager
 
-echo -e "[${yellow}15${clear}/19] Launching IBL Data Manager..."
-ibl launch --ibl-dm
-
 echo -e "[${yellow}16${clear}/19] Launching IBL AXD Reporter..."
 ibl launch --ibl-axd-reporter
 
-echo -e "[${yellow}17${clear}/19] Launching IBL AXD Web Analytics..."
-ibl launch --ibl-axd-web-analytics
+echo -e "[${yellow}15${clear}/19] Launching IBL Data Manager..."
+ibl launch --ibl-dm
 
 echo -e "[${yellow}18${clear}/19] Launching IBL Search..."
 ibl launch --ibl-search
 
-echo -e "[${yellow}19${clear}/19] Launching IBL Search..."
+echo -e "[${yellow}19${clear}/19] Launching IBL Proxy..."
 ibl global-proxy launch
 
 echo "Cleaning up..."
