@@ -223,9 +223,14 @@ else
     BRANCH="develop"
 fi
 # Then use $BRANCH in your script where you need to specify the branch
+
+# Prompt for GitHub organization
+echo "Enter the GitHub organization name (location of ibl-cli-ops repo):"
+read GITHUB_ORG
+
 # Install IBL CLI
 echo "[9/10] Installing IBL CLI..."
-pip install -e git+https://$GIT_ACCESS_TOKEN@github.com/ibleducation/ibl-cli-ops.git@$BRANCH#egg=ibl-cli
+pip install -e git+https://$GIT_ACCESS_TOKEN@github.com/$GITHUB_ORG/ibl-cli-ops.git@$BRANCH#egg=ibl-cli
 
 echo -e "[${yellow}10${clear}/19] Setup Base Domain..."
 # Ask the user for the base domain
